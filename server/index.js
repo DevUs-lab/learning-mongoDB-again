@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const express = require('express')
 const app = express()
 
@@ -7,11 +9,6 @@ const router = require("./router/auth-router")
 const connectDb = require('./utils/db')
 
 app.use("/api/auth", router)
-
-// app.get("/register", (req, res) => {
-//     res.send("this is server Register");
-// });
-
 
 const PORT = 9343;
 connectDb().then(() => {
