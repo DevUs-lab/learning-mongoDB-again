@@ -1,9 +1,6 @@
-const express = require("express")
-
 const register = (req, res) => {
     try {
         res.send("This is the register route");
-
     } catch (error) {
         res.status(400).send({ msg: "page not found" })
 
@@ -12,10 +9,11 @@ const register = (req, res) => {
 
 const login = (req, res) => {
     try {
-        res.send("This is the login route 02");
-    } catch (error) {
-        res.status(400).send({ msg: "page not found" })
+        console.log('req.body', req.body)
+        res.status(200).send({ message: `This is the login route 02`, data: req.body });
 
+    } catch (error) {
+        res.status(400).send({ msg: `page not found"` })
     }
 }
 
