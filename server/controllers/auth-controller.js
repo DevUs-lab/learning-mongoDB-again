@@ -27,16 +27,8 @@ const register = async (req, res) => {
         // Create user — middleware will hash password
         const userCreated = await User.create({ userName, password, email, phone });
 
-        // Don't send password back
-        const userToReturn = {
-            _id: userCreated._id,
-            userName: userCreated.userName,
-            email: userCreated.email,
-            phone: userCreated.phone,
-            isAdmin: userCreated.isAdmin
-        };
-
-        return res.status(201).json({ message: "User created", user: userToReturn });
+        // this will go in frontend and now we are sending message with token
+        return res.status(201).json({ message: "User created successfully", token: await userCreated.generateToken(), userId: userCreated._id.toString() });
 
     } catch (error) {
         console.log('error', error)
