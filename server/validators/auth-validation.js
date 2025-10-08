@@ -29,12 +29,7 @@ const { z } = require("zod");
 
 
 const signUpSchema = z.object({
-    userName: z
-        .string({ required_error: "Name is required" })
-        .trim()
-        .min(3, { message: "Name must be at least 3 characters." })
-        .max(25, { message: "Name must not be more than 25 characters." })
-        .regex(/^[a-zA-Z0-9_]+$/, { message: "Username can only contain letters, numbers, and underscores" }),
+    userName: z.string({ required_error: "Name is required" }).trim().min(3, { message: "Name must be at least 3 characters." }).max(25, { message: "Name must not be more than 25 characters." }).regex(/^[a-zA-Z0-9_]+$/, { message: "Username can only contain letters, numbers, and underscores" }),
 
     email: z
         .string({ required_error: "Email is required" })
