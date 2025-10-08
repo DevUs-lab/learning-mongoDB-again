@@ -29,12 +29,15 @@ userSchema.methods.generateToken = function () {
     }
 }
 
+userSchema.methods.comparePassword = async function (password) {
+    return bcrypt.compare(password, this.password)
+}
 
 userSchema.pre("save", async function (next) {
     let user = this
     console.log('this (middleware)', this)
     if (!user.isModified("password")) {
-        next()
+        return next()
     }
 
     try {

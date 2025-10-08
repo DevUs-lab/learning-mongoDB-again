@@ -1,5 +1,5 @@
-const User = require("../models/user_modle");
-// const bcrypt = require("bcrypt")
+const User = require("../models/user_model");
+const bcrypt = require("bcrypt")
 
 const register = async (req, res) => {
     try {
@@ -19,9 +19,7 @@ const register = async (req, res) => {
         }
 
         if (userExist) {
-            res.status(400).json("Email is already exist")
-            res.status(400).send({ message: "User registered successfully" })
-            return
+            return res.status(400).json({ message: "Email already exists" });
         }
 
         // Create user — middleware will hash password
@@ -31,18 +29,41 @@ const register = async (req, res) => {
         return res.status(201).json({ message: "User created successfully", token: await userCreated.generateToken(), userId: userCreated._id.toString() });
 
     } catch (error) {
-        console.log('error', error)
-        res.status(400).json({ msg: "page not found" })
+        console.log('Detailed error:', error);
+        res.status(500).json({ msg: "Internal server error", error: error.message });
     }
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
     try {
         console.log('req.body', req.body)
-        res.status(200).send({ message: `This is the login route 02`, data: req.body });
+
+        const { password, email } = req.body
+
+        const userExist = await User.findOne({ email })
+
+        if (!userExist) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+
+        }
+
+        // const user = await bcrypt.compare(password, userExist.password);
+        const user = await userExist.comparePassword(password)
+
+        if (user) {
+            res.status(200).json({
+                message: "Login successfully",
+                token: await userExist.generateToken(),
+                userId: userExist._id.toString()
+            });
+        } else {
+            res.status(401).json({ message: "Invalid email or password" });
+        }
+
 
     } catch (error) {
-        res.status(400).send({ msg: `page not found"` })
+        console.log('Detailed error:', error);
+        res.status(500).json({ msg: "Internal server error", error: error.message });
     }
 }
 
