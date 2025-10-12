@@ -24,12 +24,18 @@ const validate = (schema) => async (req, res, next) => {
         const parseBody = await schema.parseAsync(req.body); // validate body
         req.body = parseBody; // save clean data
         next(); // move to next middleware
-    } catch (error) {
-        const firstError = error.errors?.[0]?.message;
+    } catch (err) {
+        const status = 422;
+        const message = "Fill all input properly"
+        const extraDetails = err.errors?.[0]?.message || "Validation failed";
 
-        console.log('firstError', firstError)
-        res.status(400).json({ mes: firstError, err: error })
+        const error = {
+            status, message, extraDetails
+        }
+        next(error)
+        // console.log('firstError', firstError)
+        // res.status(400).json({ mes: firstError, err: error })
     }
 };
 
-module.exports = validate;
+module.exports = validate;   

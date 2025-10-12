@@ -1,7 +1,8 @@
+const Contact = require("../models/contact_model");
 const User = require("../models/user_model");
 const bcrypt = require("bcrypt")
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
 
         const { userName, password, email, phone } = req.body
@@ -28,9 +29,17 @@ const register = async (req, res) => {
         // this will go in frontend and now we are sending message with token
         return res.status(201).json({ message: "User created successfully", token: await userCreated.generateToken(), userId: userCreated._id.toString() });
 
-    } catch (error) {
-        console.log('Detailed error:', error);
-        res.status(500).json({ msg: "Internal server error", error: error.message });
+    } catch (err) {
+        console.log('Detailed error:', err);
+        const message = "Internal server error"
+        const status = 500
+        const extraDetails = err
+
+        const error = {
+            message, status, extraDetails
+        }
+        next(error)
+        // res.status(500).json({ msg: "Internal server error", error: error.message });
     }
 }
 
@@ -61,10 +70,14 @@ const login = async (req, res) => {
         }
 
 
-    } catch (error) {
-        console.log('Detailed error:', error);
-        res.status(500).json({ msg: "Internal server error", error: error.message });
+    } catch (err) {
+        console.error("Detailed error:", err);
+
+        next({
+            message: "Internal server error",
+            status: 500,
+            extraDetails: err,
+        });
     }
 }
-
-module.exports = { login, register };
+module.exports = { login, register }
