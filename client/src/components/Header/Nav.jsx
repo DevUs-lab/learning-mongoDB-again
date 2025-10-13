@@ -2,6 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Nav = () => {
+    const isAuth = true
+
     return (
         <div style={{ background: "#1F1F1F" }}>
 
@@ -58,14 +60,24 @@ const Nav = () => {
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink
-                                        to='/register'
-                                        className={({ isActive }) =>
-                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
-                                        }
-                                    >
-                                        Register
-                                    </NavLink>
+                                    {isAuth ?
+                                        <NavLink
+                                            to='/auth/register'
+                                            className={({ isActive }) =>
+                                                `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            }
+                                        >
+                                            Register
+                                        </NavLink>
+                                        : <NavLink
+                                            to='/auth/login'
+                                            className={({ isActive }) =>
+                                                `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            }
+                                        >
+                                            Login
+                                        </NavLink>
+                                    }
                                 </li>
                             </ul>
                         </nav>
