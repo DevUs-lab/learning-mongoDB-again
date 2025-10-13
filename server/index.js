@@ -8,10 +8,12 @@ app.use(express.json())
 
 const authRouter = require("./router/auth-router")
 const contactRouter = require("./router/contactRouter")
+const aboutRouter = require('./router/aboutRouter')
 const connectDb = require('./utils/db')
 
 app.use("/api/auth", authRouter)
 app.use('/api/form', contactRouter)
+app.use('/api/about', aboutRouter)
 app.use(error_middlewares)
 const PORT = 9343;
 connectDb().then(() => {
