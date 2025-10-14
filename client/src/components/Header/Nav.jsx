@@ -5,7 +5,8 @@ const Nav = () => {
     const isAuth = true
 
     return (
-        <div style={{ background: "#1F1F1F" }}>
+        // <div style={{ background: "#1F1F1F" }}>
+        <div style={{ background: "#6C757D" }}>
 
             <div className="container navbar-dark text-white">
 
@@ -61,22 +62,42 @@ const Nav = () => {
                                 </li>
                                 <li>
                                     {isAuth ?
-                                        <NavLink
-                                            to='/auth/register'
-                                            className={({ isActive }) =>
-                                                `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
-                                            }
-                                        >
-                                            Register
-                                        </NavLink>
-                                        : <NavLink
-                                            to='/auth/login'
-                                            className={({ isActive }) =>
-                                                `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
-                                            }
-                                        >
-                                            Login
-                                        </NavLink>
+                                        <>
+                                            <NavLink
+                                                to='/auth/register'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                }
+                                            >
+                                                Register
+                                            </NavLink>
+                                            <NavLink
+                                                to='/auth/login'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                }
+                                            >
+                                                Login
+                                            </NavLink>
+                                        </>
+                                        : <>
+                                            <NavLink
+                                                to='/auth/dashboard'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                }
+                                            >
+                                                Dasboard
+                                            </NavLink>
+                                            <NavLink
+                                                to='/'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                }
+                                            >
+                                                Logout
+                                            </NavLink>
+                                        </>
                                     }
                                 </li>
                             </ul>

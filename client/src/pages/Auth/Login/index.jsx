@@ -5,12 +5,12 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import axios from 'axios';
 
-// Only need email and password for login
 const initialState = { email: '', password: '' };
 
 const Login = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(initialState);
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,11 +19,14 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true)
 
         const { email, password } = user;
 
         if (!email || !password) {
             message.error('Please fill out all fields!');
+            setIsLoading(false);
+
             return;
         }
 
@@ -32,25 +35,22 @@ const Login = () => {
 
             console.log('Backend Response:', res.data);
 
-            // ✅ FIXED: Use the actual response data
             if (res.data.message) {
                 message.success(res.data.message);
             } else {
                 message.success('Login successful!');
             }
 
-            // ✅ Store user data for later use
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('userId', res.data.userId);
 
-            // ✅ If you want to store username, you'll need to modify your backend
-            // For now, we can store email
             localStorage.setItem('userEmail', email);
 
             setUser(initialState);
 
-            // ✅ Navigate to home/dashboard after successful login
             setTimeout(() => navigate('/'), 1000);
+
+            setIsLoading(false)
 
         } catch (err) {
             console.error('Login Error:', err);
@@ -66,6 +66,8 @@ const Login = () => {
                 message.error('Something went wrong. Try again.');
             }
         }
+        setIsLoading(false)
+
     };
 
     return (
@@ -74,7 +76,7 @@ const Login = () => {
                 <div className="row">
                     <div style={{ minWidth: '10px' }}>
                         <button
-                            className="col btn text- fw-bolder p-1 px-3 ms-auto d-flex"
+                            className="col btn text- fw-bolder p-2 text-white px-3 ms-auto d-flex"
                             style={{ background: '#6C63FF' }}
                             onClick={() => navigate('/')}
                         >
@@ -95,6 +97,7 @@ const Login = () => {
                                     type="email"
                                     placeholder="Enter your Email"
                                     name="email"
+                                    autoFocus
                                     value={user.email}
                                     onChange={handleChange}
                                     className="form-control"
@@ -113,8 +116,8 @@ const Login = () => {
                             </div>
 
                             <div>
-                                <button className="btn w-100" style={{ background: '#6C63FF' }}>
-                                    Login
+                                <button className="btn w-100" loading={isLoading} style={{ background: '#6C63FF' }}>
+                                    {isLoading ? 'Logging in...' : 'Login'}
                                 </button>
                             </div>
                         </div>

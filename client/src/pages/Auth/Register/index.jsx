@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import image from '../../../assets/undraw_sign-up_z2ku.svg';
 import './register.scss';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 import axios from 'axios'
 const initialState = { userName: '', email: '', phone: '', password: '', };
+
 
 const Register = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(initialState);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,13 +19,60 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true)
+        let { userName, email, phone, password } = user;
 
-        const { userName, email, phone, password } = user;
+
+        userName = userName?.trim()
+        email = email?.trim() || ''
+        phone = phone?.trim() || ''
+        password = password?.trim() || ''
 
 
+        if (!userName) {
+            message.error("Name is required");
+            setIsLoading(false);
+            return;
+        }
+        if (userName.length < 3) {
+            message.error("Name must be at least 3 characters long");
+            setIsLoading(false);
+            return;
+        }
+        if (userName.length > 25) {
+            message.error("Name must not exceed 25 characters");
+            setIsLoading(false);
+            return;
+        }
 
-        if (!userName || !email || !phone || !password) {
-            message.error('Please fill out all fields!');
+        // Validate email
+        if (!email) {
+            message.error("Email is required");
+            setIsLoading(false);
+            return;
+        }
+
+        // Validate phone - FIXED LOGIC
+        if (!phone) {
+            message.error("Please enter your mobile number");
+            setIsLoading(false);
+            return;
+        }
+        if (phone.length < 10) {  // ✅ Check if phone is valid length
+            message.error("Please enter a valid mobile number (at least 10 digits)");
+            setIsLoading(false);
+            return;
+        }
+
+        // Validate password - FIXED LOGIC
+        if (!password) {
+            message.error("Password is required!");
+            setIsLoading(false);
+            return;
+        }
+        if (password.length < 6) {
+            message.error("Password must be at least 6 characters");
+            setIsLoading(false);
             return;
         }
 
@@ -33,23 +82,27 @@ const Register = () => {
 
             message.success(`Welcome ${userName}, registration successful!`);
 
-            setUser(initialState);
+            // setUser(initialState);
             // setTimeout(() => navigate('/auth/login'), 1000);
 
             console.log('Registration Response:', res.data);
         } catch (err) {
             console.error('Registration Error:', err);
-            message.error(err.response?.data?.message || 'Registration failed. Try again.');
+            // message.error(err.response?.data?.message || 'Registration failed. Try again.');
             if (err.response?.data?.extraDetails) {
-                message.error(`Validation error: ${err.response.data.extraDetails}`);
+                message.error(`Validation error: ${err.response.data.extraDetails}.`);
             } else {
                 message.error(err.response?.data?.message || 'Registration failed. Try again.');
             }
+            setIsLoading(false)
+
+            return
         }
+        setIsLoading(false)
+        setTimeout(() => {
+            navigate('/auth/login');
+        }, 1000);
     };
-    // setTimeout(() => {
-    //     navigate('/auth/login');
-    // }, 1500);
 
 
     return (
@@ -99,7 +152,7 @@ const Register = () => {
 
                             <div className="col-12">
                                 <input
-                                    type="number"
+                                    type="tel"
                                     placeholder="Enter your Phone"
                                     name="phone"
                                     autoComplete='off'
@@ -121,7 +174,9 @@ const Register = () => {
                             </div>
 
                             <div>
-                                <button className="btn w-100" style={{ background: "#6C63FF" }}>Register</button>
+                                <button className="btn w-100" disabled={isLoading} style={{ background: "#6C63FF", opacity: isLoading ? 0.7 : 1 }}>
+                                    {isLoading ? "Registering..." : 'Register'}
+                                </button>
                             </div>
                         </div>
                     </form>
