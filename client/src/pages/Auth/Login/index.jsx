@@ -3,8 +3,10 @@ import image from '../../../assets/undraw_sign-in_uva0.svg';
 import '../Register/register.scss';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import axios from 'axios';
 
-const initialState = { name: '', email: '', phone: '', password: '', };
+// Only need email and password for login
+const initialState = { email: '', password: '' };
 
 const Login = () => {
     const navigate = useNavigate();
@@ -12,26 +14,58 @@ const Login = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUser((prev) => ({ ...prev, [name]: value, }));
+        setUser((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { name, email, phone, password } = user;
+        const { email, password } = user;
 
-        if (!name || !email || !phone || !password) {
+        if (!email || !password) {
             message.error('Please fill out all fields!');
             return;
         }
 
-        message.success(`Welcome ${name}, registration successful!`);
+        try {
+            const res = await axios.post('http://localhost:9343/api/auth/login', user);
 
-        setUser(initialState);
+            console.log('Backend Response:', res.data);
 
-        // setTimeout(() => {
-        //     navigate('/auth/login');
-        // }, 1500);
+            // ✅ FIXED: Use the actual response data
+            if (res.data.message) {
+                message.success(res.data.message);
+            } else {
+                message.success('Login successful!');
+            }
+
+            // ✅ Store user data for later use
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('userId', res.data.userId);
+
+            // ✅ If you want to store username, you'll need to modify your backend
+            // For now, we can store email
+            localStorage.setItem('userEmail', email);
+
+            setUser(initialState);
+
+            // ✅ Navigate to home/dashboard after successful login
+            setTimeout(() => navigate('/'), 1000);
+
+        } catch (err) {
+            console.error('Login Error:', err);
+
+            const backendMessage = err.response?.data?.message;
+            const validationDetails = err.response?.data?.extraDetails;
+
+            if (validationDetails) {
+                message.error(`Validation error: ${validationDetails}`);
+            } else if (backendMessage) {
+                message.error(backendMessage);
+            } else {
+                message.error('Something went wrong. Try again.');
+            }
+        }
     };
 
     return (
@@ -51,12 +85,11 @@ const Login = () => {
 
                 <div className="register-grid p-3">
                     <div className="image-col">
-                        <img src={image} alt="Sign up" className="img-fluid" />
+                        <img src={image} alt="Sign in" className="img-fluid" />
                     </div>
 
                     <form className="form-col w-100" onSubmit={handleSubmit}>
                         <div className="row g-2">
-
                             <div className="col-12">
                                 <input
                                     type="email"
@@ -69,7 +102,9 @@ const Login = () => {
                             </div>
 
                             <div className="col-12">
-                                <input type="password" placeholder="Set your Password"
+                                <input
+                                    type="password"
+                                    placeholder="Enter your Password"
                                     name="password"
                                     value={user.password}
                                     onChange={handleChange}
@@ -78,7 +113,9 @@ const Login = () => {
                             </div>
 
                             <div>
-                                <button className="btn w-100" style={{ background: '#6C63FF' }}>Login</button>
+                                <button className="btn w-100" style={{ background: '#6C63FF' }}>
+                                    Login
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -90,13 +127,15 @@ const Login = () => {
                     <div className="col-md-6 col-12">
                         <p className='d-block w-100 text-center text-white'>
                             Create new account?{' '}
-                            <Link className='text-decoration- text-white fw-bold' to={'/auth/register'}>Register</Link>
+                            <Link className='text-decoration- text-white fw-bold' to={'/auth/register'}>
+                                Register
+                            </Link>
                         </p>
                     </div>
                 </div>
             </div>
         </section>
     );
-};
+}
 
 export default Login;

@@ -27,8 +27,12 @@ const validate = (schema) => async (req, res, next) => {
     } catch (err) {
         const status = 422;
         const message = "Fill all input properly"
-        const extraDetails = err.errors?.[0]?.message || "Validation failed";
+        // const extraDetails = err.errors?.[0]?.message || "Validation failed";
 
+        const extraDetails = err.errors.map(error => ({
+            field: error.path[0],
+            message: error.message
+        }));
         const error = {
             status, message, extraDetails
         }

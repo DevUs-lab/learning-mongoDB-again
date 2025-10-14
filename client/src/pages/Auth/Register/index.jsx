@@ -40,6 +40,11 @@ const Register = () => {
         } catch (err) {
             console.error('Registration Error:', err);
             message.error(err.response?.data?.message || 'Registration failed. Try again.');
+            if (err.response?.data?.extraDetails) {
+                message.error(`Validation error: ${err.response.data.extraDetails}`);
+            } else {
+                message.error(err.response?.data?.message || 'Registration failed. Try again.');
+            }
         }
     };
     // setTimeout(() => {
@@ -71,6 +76,7 @@ const Register = () => {
                         <div className="row g-2">
                             <div className="col-12">
                                 <input
+                                    autoFocus="true"
                                     type="text"
                                     placeholder="Enter your name"
                                     name="userName"
@@ -93,9 +99,10 @@ const Register = () => {
 
                             <div className="col-12">
                                 <input
-                                    type="text"
+                                    type="number"
                                     placeholder="Enter your Phone"
                                     name="phone"
+                                    autoComplete='off'
                                     value={user.phone}
                                     onChange={handleChange}
                                     className="form-control"
