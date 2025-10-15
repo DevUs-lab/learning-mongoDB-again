@@ -1,30 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
+import '../../scss/_Nav.scss'
 const Nav = () => {
-    const isAuth = true
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const isAuth = false; // Change this based on your auth logic
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+    };
 
     return (
-        // <div style={{ background: "#1F1F1F" }}>
         <div style={{ background: "#6C757D" }}>
-
             <div className="container navbar-dark text-white">
-
                 <div className="row">
-                    <div className="col d-flex align-items-center justify-content-between m-0 p-3 mt-1">
-                        <h3>
-                            <NavLink to='/' className="text-decoration-none text-dark text-white fw-bold">
-
+                    <div className="col d-flex align-items-center justify-content-between p-3">
+                        {/* Logo */}
+                        <h3 className="mb-0">
+                            <NavLink to='/' className="text-decoration-none text-white fw-bold" onClick={closeMenu}                            >
                                 Logo
                             </NavLink>
                         </h3>
-                        <nav>
-                            <ul className='list-unstyled d-flex'>
+
+                        {/* Desktop Navigation - hidden on mobile */}
+                        <nav className="d-none d-lg-block">
+                            <ul className="list-unstyled d-flex align-items-center mb-0">
                                 <li>
                                     <NavLink
                                         to='/'
                                         className={({ isActive }) =>
-                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                         }
                                     >
                                         Home
@@ -34,7 +42,7 @@ const Nav = () => {
                                     <NavLink
                                         to='/about'
                                         className={({ isActive }) =>
-                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                         }
                                     >
                                         About
@@ -44,7 +52,7 @@ const Nav = () => {
                                     <NavLink
                                         to='/contact'
                                         className={({ isActive }) =>
-                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                         }
                                     >
                                         Contact
@@ -54,51 +62,170 @@ const Nav = () => {
                                     <NavLink
                                         to='/services'
                                         className={({ isActive }) =>
-                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                            `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                         }
                                     >
                                         Services
                                     </NavLink>
                                 </li>
-                                <li>
-                                    {isAuth ?
-                                        <>
+
+                                {/* Auth Links */}
+                                {!isAuth ? (
+                                    <>
+                                        <li>
                                             <NavLink
                                                 to='/auth/register'
                                                 className={({ isActive }) =>
-                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                                }
+                                            >
+                                                Register
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                to='/auth/login'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                                }
+                                            >
+                                                Login
+                                            </NavLink>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <>
+                                        <li>
+                                            <NavLink
+                                                to='/auth/dashboard'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                                }
+                                            >
+                                                Dashboard
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                to='/'
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                                }
+                                            >
+                                                Logout
+                                            </NavLink>
+                                        </li>
+                                    </>
+                                )}
+                            </ul>
+                        </nav>
+
+                        {/* Mobile Menu Button - hidden on desktop */}
+                        <button
+                            className="d-lg-none btn border-0 navBtnhover"
+
+                            type="button"
+                            onClick={toggleMenu}
+                            aria-label="Toggle navigation"
+                        >
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu - shown when menu is open */}
+                    <div className={`col-12 d-lg-none ${isMenuOpen ? 'd-block' : 'd-none'}`}>
+                        <nav className="py-3">
+                            <ul className="list-unstyled d-flex flex-column">
+                                <li>
+                                    <NavLink
+                                        to='/'
+                                        onClick={closeMenu}
+                                        className={({ isActive }) =>
+                                            `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                        }
+                                    >
+                                        Home
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to='/about'
+                                        onClick={closeMenu}
+                                        className={({ isActive }) =>
+                                            `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                        }
+                                    >
+                                        About
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to='/contact'
+                                        onClick={closeMenu}
+                                        className={({ isActive }) =>
+                                            `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                        }
+                                    >
+                                        Contact
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to='/services'
+                                        onClick={closeMenu}
+                                        className={({ isActive }) =>
+                                            `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
+                                        }
+                                    >
+                                        Services
+                                    </NavLink>
+                                </li>
+
+                                {/* Mobile Auth Links */}
+                                <li className="border-top border-light mt-2 pt-2">
+                                    {!isAuth ? (
+                                        <>
+                                            <NavLink
+                                                to='/auth/register'
+                                                onClick={closeMenu}
+                                                className={({ isActive }) =>
+                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                                 }
                                             >
                                                 Register
                                             </NavLink>
                                             <NavLink
                                                 to='/auth/login'
+                                                onClick={closeMenu}
                                                 className={({ isActive }) =>
-                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                                 }
                                             >
                                                 Login
                                             </NavLink>
                                         </>
-                                        : <>
+                                    ) : (
+                                        <>
                                             <NavLink
                                                 to='/auth/dashboard'
+                                                onClick={closeMenu}
                                                 className={({ isActive }) =>
-                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                                 }
                                             >
-                                                Dasboard
+                                                Dashboard
                                             </NavLink>
                                             <NavLink
                                                 to='/'
+                                                onClick={closeMenu}
                                                 className={({ isActive }) =>
-                                                    `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white" : "text-white-50"}`
+                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                                 }
                                             >
                                                 Logout
                                             </NavLink>
                                         </>
-                                    }
+                                    )}
                                 </li>
                             </ul>
                         </nav>
@@ -107,58 +234,6 @@ const Nav = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Nav;
-
-
-
-// import React from 'react';
-// import { NavLink } from 'react-router-dom';
-
-// const Nav = () => {
-//     return (
-//         <div style={{ background: "#1F1F1F" }}>
-//             <div className="container navbar-dark text-white">
-//                 <div className="row">
-//                     <div className="col d-flex align-items-center justify-content-between p-3">
-
-//                         <h3>
-//                             <NavLink to='/' className="text-decoration-none text-white fw-bold">
-//                                 Logo
-//                             </NavLink>
-//                         </h3>
-
-//                         <nav>
-//                             <ul className='list-unstyled d-flex mb-0'>
-//                                 {[
-//                                     { to: "/", label: "Home" },
-//                                     { to: "/about", label: "About" },
-//                                     { to: "/contact", label: "Contact" },
-//                                     { to: "/services", label: "Services" },
-//                                     { to: "/register", label: "Register" }
-//                                 ].map(({ to, label }) => (
-//                                     <li key={to}>
-//                                         <NavLink
-//                                             to={to}
-//                                             className={({ isActive }) =>
-//                                                 `px-3 py-2 text-decoration-none ${isActive
-//                                                     ? "border-bottom border-3 border-primary text-white"
-//                                                     : "text-white-50"}`
-//                                             }
-//                                         >
-//                                             {label}
-//                                         </NavLink>
-//                                     </li>
-//                                 ))}
-//                             </ul>
-//                         </nav>
-
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Nav;

@@ -4,7 +4,9 @@ import Nav from './Nav'
 const Header = () => {
     return (
         <header>
-            <Nav></Nav>
+            <nav>
+                <Nav></Nav>
+            </nav>
         </header>
     )
 }

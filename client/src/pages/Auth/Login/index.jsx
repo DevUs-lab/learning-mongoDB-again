@@ -10,7 +10,7 @@ const initialState = { email: '', password: '' };
 const Login = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(initialState);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,38 +19,72 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true)
+        setIsLoading(true);
 
-        const { email, password } = user;
+        // Create trimmed values
+        const trimmedUser = {
+            email: user.email?.trim() || '',
+            password: user.password?.trim() || ''
+        };
 
-        if (!email || !password) {
-            message.error('Please fill out all fields!');
+        const { email, password } = trimmedUser;
+
+        // Validate email
+        if (!email) {
+            message.error("Email is required");
             setIsLoading(false);
+            return;
+        }
 
+        // Basic email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            message.error("Please enter a valid email address");
+            setIsLoading(false);
+            return;
+        }
+
+        // Validate password
+        if (!password) {
+            message.error("Password is required!");
+            setIsLoading(false);
+            return;
+        }
+        if (password.length < 6) {
+            message.error("Password must be at least 6 characters");
+            setIsLoading(false);
             return;
         }
 
         try {
-            const res = await axios.post('http://localhost:9343/api/auth/login', user);
+            // Use trimmed data for API call
+            const res = await axios.post('http://localhost:9343/api/auth/login', trimmedUser);
 
             console.log('Backend Response:', res.data);
 
+            // Store user data
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('userId', res.data.userId);
+            localStorage.setItem('userEmail', email);
+
+            // Store username if available from backend
+            if (res.data.userName) {
+                localStorage.setItem('userName', res.data.userName);
+            }
+
+            // Show success message
             if (res.data.message) {
                 message.success(res.data.message);
             } else {
                 message.success('Login successful!');
             }
 
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('userId', res.data.userId);
-
-            localStorage.setItem('userEmail', email);
-
+            // Reset form
             setUser(initialState);
+            setIsLoading(false);
 
+            // Navigate after success
             setTimeout(() => navigate('/'), 1000);
-
-            setIsLoading(false)
 
         } catch (err) {
             console.error('Login Error:', err);
@@ -65,9 +99,9 @@ const Login = () => {
             } else {
                 message.error('Something went wrong. Try again.');
             }
-        }
-        setIsLoading(false)
 
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -116,7 +150,14 @@ const Login = () => {
                             </div>
 
                             <div>
-                                <button className="btn w-100" loading={isLoading} style={{ background: '#6C63FF' }}>
+                                <button
+                                    className="btn w-100"
+                                    disabled={isLoading}
+                                    style={{
+                                        background: '#6C63FF',
+                                        opacity: isLoading ? 0.7 : 1
+                                    }}
+                                >
                                     {isLoading ? 'Logging in...' : 'Login'}
                                 </button>
                             </div>

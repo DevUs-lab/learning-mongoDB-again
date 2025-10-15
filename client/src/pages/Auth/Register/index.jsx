@@ -19,16 +19,17 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true)
+        setIsLoading(true);
+
         let { userName, email, phone, password } = user;
 
+        // Trim values
+        userName = userName?.trim() || '';
+        email = email?.trim() || '';
+        phone = phone?.trim() || '';
+        password = password?.trim() || '';
 
-        userName = userName?.trim()
-        email = email?.trim() || ''
-        phone = phone?.trim() || ''
-        password = password?.trim() || ''
-
-
+        // Validation
         if (!userName) {
             message.error("Name is required");
             setIsLoading(false);
@@ -52,19 +53,27 @@ const Register = () => {
             return;
         }
 
-        // Validate phone - FIXED LOGIC
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            message.error("Please enter a valid email address");
+            setIsLoading(false);
+            return;
+        }
+
+        // Validate phone
         if (!phone) {
             message.error("Please enter your mobile number");
             setIsLoading(false);
             return;
         }
-        if (phone.length < 10) {  // ✅ Check if phone is valid length
+        if (phone.length < 10) {
             message.error("Please enter a valid mobile number (at least 10 digits)");
             setIsLoading(false);
             return;
         }
 
-        // Validate password - FIXED LOGIC
+        // Validate password
         if (!password) {
             message.error("Password is required!");
             setIsLoading(false);
@@ -76,34 +85,35 @@ const Register = () => {
             return;
         }
 
-
         try {
-            const res = await axios.post('http://localhost:9343/api/auth/register', user);
+            // Create object with trimmed data
+            const trimmedUser = { userName, email, phone, password };
+
+            const res = await axios.post('http://localhost:9343/api/auth/register', trimmedUser);
 
             message.success(`Welcome ${userName}, registration successful!`);
 
-            // setUser(initialState);
-            // setTimeout(() => navigate('/auth/login'), 1000);
+            // Reset form and state
+            setUser(initialState);
+            setIsLoading(false);
 
             console.log('Registration Response:', res.data);
+
+            // Navigate after success
+            setTimeout(() => navigate('/auth/login'), 1000);
+
         } catch (err) {
             console.error('Registration Error:', err);
-            // message.error(err.response?.data?.message || 'Registration failed. Try again.');
+
             if (err.response?.data?.extraDetails) {
                 message.error(`Validation error: ${err.response.data.extraDetails}.`);
             } else {
                 message.error(err.response?.data?.message || 'Registration failed. Try again.');
             }
-            setIsLoading(false)
 
-            return
+            setIsLoading(false);
         }
-        setIsLoading(false)
-        setTimeout(() => {
-            navigate('/auth/login');
-        }, 1000);
     };
-
 
     return (
         <section className='bg-secondary min-vh-100 py-5 d-flex align-items-center justify-content-center flex-column'>
