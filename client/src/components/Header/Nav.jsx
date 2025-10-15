@@ -20,7 +20,7 @@ const Nav = () => {
                     <div className="col d-flex align-items-center justify-content-between p-3">
                         {/* Logo */}
                         <h3 className="mb-0">
-                            <NavLink to='/' className="text-decoration-none text-white fw-bold" onClick={closeMenu}                            >
+                            <NavLink to='/' className="text-decoration-none text-white fw-bold" onClick={closeMenu}>
                                 Logo
                             </NavLink>
                         </h3>
