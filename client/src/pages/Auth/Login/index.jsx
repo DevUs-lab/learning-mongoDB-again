@@ -112,7 +112,7 @@ const Login = () => {
                         <button
                             className="col btn text- fw-bolder p-2 text-white px-3 ms-auto d-flex"
                             style={{ background: '#6C63FF' }}
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate(-1)}
                         >
                             X
                         </button>

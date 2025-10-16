@@ -122,7 +122,7 @@ const Register = () => {
                     <div style={{ minWidth: '10px' }}>
                         <button
                             className="col btn text-white text- fw-bolder p-2 px-3 ms-auto  rounded d-flex"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate(-1)}
                             style={{ background: "#6C63FF" }}
                         >
                             X

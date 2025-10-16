@@ -1,5 +1,6 @@
 import React from 'react'
 import aboutImage from '../../../assets/undraw_team_85hs.svg'
+import SomethingLikeCard from '../../../components/SomethingLikeCard'
 const AboutUS = () => {
     return (
         <div>
@@ -22,6 +23,7 @@ const AboutUS = () => {
                         <img src={aboutImage} className='img-fluid aboutImage' alt="about page image" />
                     </div>
                 </div>
+                <SomethingLikeCard />
             </div>
         </div>
     )

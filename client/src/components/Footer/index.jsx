@@ -1,8 +1,9 @@
 import React from 'react'
+import CpopyRitht from './CpopyRitht'
 
 const Footer = () => {
     return (
-        <div>Footer</div>
+        <CpopyRitht />
     )
 }
 
