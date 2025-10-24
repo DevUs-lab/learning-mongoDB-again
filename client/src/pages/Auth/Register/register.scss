@@ -1,0 +1,38 @@
+.register-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    gap: 1rem;
+
+    .image-col {
+        text-align: center;
+        width: 400px;
+        margin: auto;
+    }
+
+    .btnblue {
+        background: #6C63FF;
+    }
+
+    .form-col {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    @media (max-width: 470px) {
+
+        // grid-template-columns: 1fr;
+        // text-align: center;
+        .image-col {
+            width: 250px;
+            // width: 250px;
+            // display: none;
+            ;
+        }
+    }
+}

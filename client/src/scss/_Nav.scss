@@ -1,0 +1,36 @@
+// .active {
+//     color: red;
+//     text-decoration: underline;
+//     font: bold;
+// }
+
+// li {
+//     min-width: 70px;
+//     // min-width: 100%;
+// }
+.navBtnhover:hover {
+    background: #747C83;
+    color: white;
+    border: 1px solid;
+    color: whitesmoke !important;
+}
+
+
+.nav-link {
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Mobile menu animations */
+.col-12.d-lg-none {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ensure proper contrast */
+.text-white-50:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+}

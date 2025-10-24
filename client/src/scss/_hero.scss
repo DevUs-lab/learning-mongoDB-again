@@ -1,0 +1,25 @@
+.heroImage {
+    width: 300px;
+}
+
+@media (min-width:700px) {
+    .heroImage {
+        width: 400px;
+    }
+
+}
+
+.heroImage2 {
+    height: 300px !important;
+}
+
+.remoove-add-border {
+    border-right: solid #212529 2px;
+}
+
+@media (max-width:398px) {
+    .remoove-add-border {
+        border-right: none;
+        margin-right: 2px;
+    }
+}

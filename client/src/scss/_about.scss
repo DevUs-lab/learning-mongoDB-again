@@ -1,0 +1,9 @@
+.aboutImage {
+    width: 350px !important;
+}
+
+@media (max-width:500px) {
+    .aboutImage {
+        width: 300px !important
+    }
+}
