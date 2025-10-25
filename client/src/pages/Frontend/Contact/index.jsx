@@ -4,7 +4,9 @@ import ContactUs from './ContactUs'
 const Contact = () => {
     return (
         <>
-            <ContactUs />
+            <main>
+                <ContactUs />
+            </main>
         </>
     )
 }

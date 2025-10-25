@@ -1,0 +1,34 @@
+.notfound {
+  background: linear-gradient(135deg, #f9fafb, #f1f3f5);
+  animation: fadeIn 0.8s ease-in;
+}
+
+.animate-bounce {
+  animation: bounce 1.2s ease infinite;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bounce animation for 404 text */
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+}

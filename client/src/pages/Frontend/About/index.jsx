@@ -4,7 +4,9 @@ import AboutUS from './AboutUS'
 const About = () => {
     return (
         <>
-            <AboutUS />
+            <main>
+                <AboutUS />
+            </main>
         </>
     )
 }
