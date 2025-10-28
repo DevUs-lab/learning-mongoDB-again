@@ -4,11 +4,13 @@ import { message } from 'antd';
 import axios from 'axios';
 import image from '../../../assets/undraw_sign-in_uva0.svg';
 import '../Register/register.scss';
+import { useUser } from '../../../context/auth';
 
 const initialState = { email: '', password: '' };
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useUser()
     const location = useLocation();
     const [user, setUser] = useState(initialState);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +31,6 @@ const Login = () => {
 
         const { email, password } = trimmedUser;
 
-        // Validation
         if (!email) {
             message.error("Email is required");
             setIsLoading(false);
@@ -59,9 +60,16 @@ const Login = () => {
 
             console.log('Backend Response:', res.data);
 
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('userId', res.data.userId);
-            localStorage.setItem('userEmail', email);
+            // localStorage.setItem('token', res.data.token);
+            // localStorage.setItem('userId', res.data.userId);
+            // localStorage.setItem('userEmail', email);
+            const userData = {
+                token: res.data.token,
+                userName: res.data.userName,
+                email: trimmedUser.email
+            };
+
+            login(userData);
 
             if (res.data.userName) {
                 localStorage.setItem('userName', res.data.userName);

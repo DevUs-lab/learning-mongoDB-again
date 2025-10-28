@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import '../../scss/_Nav.scss'
+import { useUser } from '../../context/auth';
 const Nav = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const isAuth = false; // Change this based on your auth logic
-
+    const { user, logout } = useUser()
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -12,6 +12,10 @@ const Nav = () => {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
+
+    const handleLogout = () => {
+        logout()
+    }
 
     return (
         <div style={{ background: "#6C757D" }}>
@@ -70,7 +74,7 @@ const Nav = () => {
                                 </li>
 
                                 {/* Auth Links */}
-                                {!isAuth ? (
+                                {!user ? (
                                     <>
                                         <li>
                                             <NavLink
@@ -111,6 +115,7 @@ const Nav = () => {
                                                 className={({ isActive }) =>
                                                     `px-3 py-2 text-decoration-none ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
                                                 }
+                                                onClick={handleLogout}
                                             >
                                                 Logout
                                             </NavLink>
@@ -183,7 +188,7 @@ const Nav = () => {
 
                                 {/* Mobile Auth Links */}
                                 <li className="border-top border-light mt-2 pt-2">
-                                    {!isAuth ? (
+                                    {!user ? (
                                         <>
                                             <NavLink
                                                 to='/auth/register'
@@ -217,11 +222,12 @@ const Nav = () => {
                                             </NavLink>
                                             <NavLink
                                                 to='/'
-                                                onClick={closeMenu}
                                                 className={({ isActive }) =>
-                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`
-                                                }
-                                            >
+                                                    `px-3 py-2 text-decoration-none d-block ${isActive ? "border-bottom border-3 text-white fw-bold" : "text-white-50"}`}
+                                                onClick={() => {
+                                                    handleLogout();
+                                                    closeMenu();
+                                                }}>
                                                 Logout
                                             </NavLink>
                                         </>
@@ -232,7 +238,7 @@ const Nav = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

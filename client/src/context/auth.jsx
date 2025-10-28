@@ -1,17 +1,32 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 
-// 1️⃣ Create Context
 const UserContext = createContext();
 
-// 2️⃣ Create a provider component
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null); // default = not logged in
+    const [user, setUser] = useState(null);
 
-    // example function to login a user
-    const login = (userData) => setUser(userData);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userName = localStorage.getItem('userName');
+        const email = localStorage.getItem('userEmail');
+        if (token && userName) {
+            setUser({ token, userName, email });
+        }
+    }, []);
 
-    // example function to logout
-    const logout = () => setUser(null);
+    const login = (userData) => {
+        localStorage.setItem('token', userData.token);
+        localStorage.setItem('userName', userData.userName);
+        localStorage.setItem('userEmail', userData.email);
+        setUser(userData);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        setUser(null);
+    };
 
     return (
         <UserContext.Provider value={{ user, login, logout }}>
@@ -20,5 +35,4 @@ export const UserProvider = ({ children }) => {
     );
 };
 
-// 3️⃣ Custom hook for easy use
 export const useUser = () => useContext(UserContext);
