@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
 import EmailImage from '../../../assets/undraw_opened_47gd.svg';
 import axios from 'axios'
+import './contactscss.scss'
 import { message, Spin } from 'antd'
 
+
+
 const initialState = {
-    name: '',
-    email: '',
+    name: localStorage.getItem("userName") || '',
+    email: localStorage.getItem('userEmail') || '',
     message: ''
 }
+const isloggedIn = !!localStorage.getItem('userName') && localStorage.getItem('userEmail')
+
+
 const ContactUs = () => {
-    const [formData, setFormData] = useState(initialState);
+    // const { user } = useUser()
+
+    // const initialState = {
+    //     name: user?.userName || '',
+    //     email: user?.email || '',
+    //     message: ''
+    // }
+
+    // const isloggedIn = !!user
+
     const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState(initialState);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
 
     const handleSubmit = async (e) => {
         setIsLoading(true)
@@ -23,16 +40,28 @@ const ContactUs = () => {
         e.preventDefault();
         console.log(formData);
 
-        // if (!formData.name || !formData.email || !formData.message) {
-        //     message.error("Please fill out all fields");
-        //     setIsLoading(false);
-        //     return;
-        // }
+        const trimmedData = {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            message: formData.message.trim()
+        };
 
+        // Validation
+        if (!trimmedData.name || !trimmedData.email || !trimmedData.message) {
+            message.error("Please fill out all fields");
+            setIsLoading(false);
+            return;
+        }
+        if (trimmedData.message.length < 5) {
+            message.error("Please type your message correctly");
+            setIsLoading(false)
+            return;
+
+        }
 
         try {
             const { name } = formData
-            const res = await axios.post('http://localhost:9343/api/form/contact', formData);
+            const res = await axios.post('http://localhost:9343/api/form/contact', trimmedData);
 
             message.success(`Thanks ${name}, for messaging us!`);
 
@@ -89,6 +118,7 @@ const ContactUs = () => {
                                     required
                                     value={formData.name}
                                     onChange={handleChange}
+                                    disabled={isloggedIn}
                                 />
                             </div>
 
@@ -101,6 +131,7 @@ const ContactUs = () => {
                                     placeholder="Enter your email"
                                     required
                                     value={formData.email}
+                                    disabled={isloggedIn}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -114,6 +145,7 @@ const ContactUs = () => {
                                     placeholder="Write your message"
                                     required
                                     value={formData.message}
+                                    autoFocus
                                     onChange={handleChange}
                                 ></textarea>
                             </div>
