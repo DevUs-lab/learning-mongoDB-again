@@ -46,14 +46,12 @@ const ContactUs = () => {
             message: formData.message.trim()
         };
 
-        // Name validation: must be at least 2 letters
         if (!trimmedData.name || trimmedData.name.length < 2) {
             message.error("Please enter a valid name (at least 2 characters).");
             setIsLoading(false);
             return;
         }
 
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!trimmedData.email || !emailRegex.test(trimmedData.email)) {
             message.error("Please enter a valid email address.");
@@ -61,7 +59,6 @@ const ContactUs = () => {
             return;
         }
 
-        // Message validation
         if (!trimmedData.message || trimmedData.message.length < 5) {
             message.error("Please type your message correctly (at least 5 characters).");
             setIsLoading(false);

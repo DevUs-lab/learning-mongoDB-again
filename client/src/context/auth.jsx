@@ -5,7 +5,7 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => {/*  */
         const token = localStorage.getItem('token');
         const userName = localStorage.getItem('userName');
         const email = localStorage.getItem('userEmail');

@@ -82,4 +82,18 @@ const login = async (req, res) => {
         });
     }
 }
-module.exports = { login, register }
+
+const user = (req, res) => {
+    try {
+
+        const userData = req.user
+        console.log(userData)
+        res.status(200).json({ msg: "Salam", userData });
+    } catch (error) {
+        console.log(`Error from backend user: ${error.message}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+};
+
+
+module.exports = { login, register, user }
