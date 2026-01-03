@@ -25,7 +25,7 @@ const Nav = () => {
                         {/* Logo */}
                         <h3 className="mb-0">
                             <NavLink to='/' className="text-decoration-none text-white fw-bold" onClick={closeMenu}>
-                                Logo
+                                Umair Saeed
                             </NavLink>
                         </h3>
 
